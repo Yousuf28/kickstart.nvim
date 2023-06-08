@@ -107,7 +107,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  -- { 'folke/which-key.nvim', opts = {} },
   {
     -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -224,9 +224,9 @@ require('lazy').setup({
 
     'HiPhish/nvim-ts-rainbow2',
 
-    'cljoly/telescope-repo.nvim',
+    -- 'cljoly/telescope-repo.nvim',
     'airblade/vim-rooter',
-    'LinArcX/telescope-env.nvim',
+    -- 'LinArcX/telescope-env.nvim',
     {'mhinz/vim-startify', config = function()
   vim.g.startify_lists = {
     {type = 'dir',       header = {'   Current Directory ' .. vim.fn.getcwd()}},
@@ -237,11 +237,28 @@ require('lazy').setup({
 }
   end
   },
-    -- {'vim-pandoc/vim-pandoc'},
+  -- Lua
+  {
+    "ahmedkhalf/project.nvim",
+    config = function()
+      require("project_nvim").setup {
+     sync_root_with_cwd = true,
+      respect_buf_cwd = true,
+      update_focused_file = {
+        enable = true,
+        update_root = true
+      },
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+      }
+    end
+  },
+    -- {'vim-pandoc/vim-pandoc'}
     -- { 'vim-pandoc/vim-pandoc-syntax' },
     -- { 'vim-pandoc/vim-rmarkdown', branch = 'official-filetype' },
-    { 'quarto-dev/quarto-vim' },
-  { 'milanglacier/yarepl.nvim', config = true },
+    -- { 'quarto-dev/quarto-vim' },
+  -- { 'milanglacier/yarepl.nvim', config = true },
   -- 'TC72/telescope-tele-tabby.nvim',
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -262,11 +279,13 @@ require'lspconfig'.r_language_server.setup{}
 
 -- load_extension
 
-require('telescope').load_extension'repo'
+-- require('telescope').load_extension'repo'
 -- require('telescope').extensions.tele_tabby.list()
 require('telescope').load_extension'neoclip'
-require('telescope').load_extension('env')
+-- require('telescope').load_extension('env')
 require('telescope').load_extension('telescope-tabs')
+require('telescope').load_extension('projects')
+-- require'telescope'.extensions.projects.projects{}
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
@@ -324,12 +343,18 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 -- Import & assign the map() function from the utils module
 local map = require("utils").map
 
-map("n", "<leader>wl", "<C-w>l")
-map("n", "<leader>wh", "<C-w>h")
-map("n", "<leader>wk", "<C-w>k")
-map("n", "<leader>wj", "<C-w>j")
-map("n", "<leader>wv", "<C-w>v")
-map("n", "<leader>ws", "<C-w>s")
+map("n", "<leader>w", "<C-w>")
+map("n", "<leader>p", ":Telescope projects <CR>")
+map("n", "<leader>t", ":Telescope telescope-tabs list_tabs <CR>")
+map("t", "<Esc>", "<C-\\><C-n>")
+map("n", "n", "nzz")
+
+-- map("n", "<leader>wl", "<C-w>l")
+-- map("n", "<leader>wh", "<C-w>h")
+-- map("n", "<leader>wk", "<C-w>k")
+-- map("n", "<leader>wj", "<C-w>j")
+-- map("n", "<leader>wv", "<C-w>v")
+-- map("n", "<leader>ws", "<C-w>s")
 -- map("n", "<Leader>?", ":WhichKey ','<CR>")
 -- map("n", "<Leader>a", ":cclose<CR>")
 -- [[ Highlight on yank ]]
@@ -361,7 +386,19 @@ pcall(require('telescope').load_extension, 'fzf')
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+-- vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+
+vim.keymap.set('n', '<leader>,', function()
+  -- You can pass additional configuration to telescope to change theme, layout, etc.
+  require('telescope.builtin').buffers(require('telescope.themes').get_dropdown {
+    previewer = false,
+    initial_mode = 'normal',
+    prompt_title = 'Buffers',
+  })
+end, { desc = '[,] Find recently opened buffers' })
+
+-- vim.keymap.set('n', '<leader>,', function()
+--   require('telescope.builtin').buffers(require('telescope.themes'), { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
@@ -370,7 +407,7 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
+vim.keymap.set('n', '<leader>.', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
@@ -381,14 +418,15 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua','r', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
+  -- ensure_installed = { 'c', 'cpp', 'go', 'lua','r', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = { 'lua','r', 'python',  'typescript', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
 
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python', 'r'} },
-  indent = { enable = true },
+  -- indent = { enable = true },
   incremental_selection = {
     enable = true,
     keymaps = {
@@ -476,8 +514,8 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+  -- nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+  -- nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
   nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
