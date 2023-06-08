@@ -1,5 +1,4 @@
 --[[
-
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
 =====================================================================
@@ -115,7 +114,7 @@ require('lazy').setup({
     opts = {
       -- See `:help gitsigns.txt`
       signs = {
-        add = { text = '+' },
+        add = { text = '|' },
         change = { text = '~' },
         delete = { text = '_' },
         topdelete = { text = '‾' },
@@ -191,6 +190,44 @@ require('lazy').setup({
     build = ':TSUpdate',
   },
 
+ {
+  "AckslD/nvim-neoclip.lua",
+  requires = {
+    -- you'll need at least one of these
+    -- {'nvim-telescope/telescope.nvim'},
+    -- {'ibhagwan/fzf-lua'},
+  },
+  config = function()
+    require('neoclip').setup()
+  end,
+},
+
+ {
+	'LukasPietzschmann/telescope-tabs',
+	requires = { 'nvim-telescope/telescope.nvim' },
+	config = function()
+		require'telescope-tabs'.setup{
+			-- Your custom config :^)
+		}
+	end
+ },
+
+ {'jpalardy/vim-slime',
+ config = function()
+ vim.g.slime_target='neovim'
+ end},
+
+{
+	"windwp/nvim-autopairs",
+    config = function() require("nvim-autopairs").setup {} end
+},
+
+    'HiPhish/nvim-ts-rainbow2',
+
+    'cljoly/telescope-repo.nvim',
+    'airblade/vim-rooter',
+    'LinArcX/telescope-env.nvim',
+  -- 'TC72/telescope-tele-tabby.nvim',
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -205,6 +242,16 @@ require('lazy').setup({
   { import = 'custom.plugins' },
 }, {})
 
+require'lspconfig'.pyright.setup{}
+require'lspconfig'.r_language_server.setup{}
+
+-- load_extension
+
+require('telescope').load_extension'repo'
+-- require('telescope').extensions.tele_tabby.list()
+require('telescope').load_extension'neoclip'
+require('telescope').load_extension('env')
+require('telescope').load_extension('telescope-tabs')
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
@@ -306,13 +353,13 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua','r', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
 
   highlight = { enable = true },
-  indent = { enable = true, disable = { 'python' } },
+  indent = { enable = true, disable = { 'python', 'r'} },
   incremental_selection = {
     enable = true,
     keymaps = {
@@ -321,6 +368,15 @@ require('nvim-treesitter.configs').setup {
       scope_incremental = '<c-s>',
       node_decremental = '<M-space>',
     },
+  },
+ rainbow = {
+    enable = true,
+    -- list of languages you want to disable the plugin for
+    disable = { 'jsx', 'cpp' },
+    -- Which query to use for finding delimiters
+    query = 'rainbow-parens',
+    -- Highlight the entire buffer all at once
+    strategy = require('ts-rainbow').strategy.global,
   },
   textobjects = {
     select = {
