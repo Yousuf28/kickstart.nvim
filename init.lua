@@ -227,6 +227,21 @@ require('lazy').setup({
     'cljoly/telescope-repo.nvim',
     'airblade/vim-rooter',
     'LinArcX/telescope-env.nvim',
+    {'mhinz/vim-startify', config = function()
+  vim.g.startify_lists = {
+    {type = 'dir',       header = {'   Current Directory ' .. vim.fn.getcwd()}},
+    {type = 'files',     header = {'   Files'}},
+    {type = 'sessions',  header = {'   Sessions'}},
+    {type = 'bookmarks', header = {'   Bookmarks'}},
+    {type = 'commands',  header = {'   Commands'}}
+}
+  end
+  },
+    -- {'vim-pandoc/vim-pandoc'},
+    -- { 'vim-pandoc/vim-pandoc-syntax' },
+    -- { 'vim-pandoc/vim-rmarkdown', branch = 'official-filetype' },
+    { 'quarto-dev/quarto-vim' },
+  { 'milanglacier/yarepl.nvim', config = true },
   -- 'TC72/telescope-tele-tabby.nvim',
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -304,6 +319,19 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
+-- Our example init.lua file
+
+-- Import & assign the map() function from the utils module
+local map = require("utils").map
+
+map("n", "<leader>wl", "<C-w>l")
+map("n", "<leader>wh", "<C-w>h")
+map("n", "<leader>wk", "<C-w>k")
+map("n", "<leader>wj", "<C-w>j")
+map("n", "<leader>wv", "<C-w>v")
+map("n", "<leader>ws", "<C-w>s")
+-- map("n", "<Leader>?", ":WhichKey ','<CR>")
+-- map("n", "<Leader>a", ":cclose<CR>")
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -456,7 +484,7 @@ local on_attach = function(_, bufnr)
   nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
   nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+  -- nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
@@ -464,11 +492,11 @@ local on_attach = function(_, bufnr)
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-  nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-  nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-  nmap('<leader>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, '[W]orkspace [L]ist Folders')
+  -- nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+  -- nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+  -- nmap('<leader>wl', function()
+  --   print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  -- end, '[W]orkspace [L]ist Folders')
 
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
