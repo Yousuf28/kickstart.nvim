@@ -249,6 +249,8 @@ require('lazy').setup({
 }
   end
   },
+-- yet another repl 
+  { 'milanglacier/yarepl.nvim', config = true },
   -- Lua
   {
     "ahmedkhalf/project.nvim",
@@ -370,7 +372,13 @@ map("t", "<Esc>", "<C-\\><C-n>")
 map("n", "n", "nzz")
 map("n", "N", "Nzz")
 map("n", "<leader>e", ":NvimTreeToggle<cr>", {silent = true, noremap = true})
+map("n", "<leader>tr", ":vert term <CR>")
+map("n", "<leader>ji", ":echo &channel <CR>")
 
+map("n", "<leader>rs", ":REPLStart! <CR>")
+-- map("n", "<C-Enter>", ":REPLSendLine <CR>j")
+map("n", "<C-Enter>", ":REPLSendLine <CR>", {silent = true})
+map("v", "<C-Enter>", ":REPLSendVisual <CR>", {silent = true})
 -- telescope file browser keymap
 map("n", "<leader>fb", ":Telescope file_browser <CR>")
 -- map("n", "<leader>wl", "<C-w>l")
@@ -674,8 +682,101 @@ cmp.setup {
   },
 }
 
-vim.cmd [[
-highlight Normal guibg='#18191c'
-]]
+
+        map('n', '<Leader>ll', '', {
+            callback = 'REPLSendLine',
+            desc = 'Send current line to REPL',
+        })
+
+        map('n', '<Leader>vv', '', {
+            callback = 'REPLSendVisual',
+            desc = 'Send current visual to REPL',
+        })
+-- yet another repl
+
+-- local function run_cmd_with_count(cmd)
+--     return function()
+--         vim.cmd(string.format('%d%s', vim.v.count, cmd))
+--     end
+-- end
+--
+-- local keymap = vim.api.nvim_set_keymap
+-- local bufmap = vim.api.nvim_buf_set_keymap
+--
+-- local ft_to_repl = {
+--     r = 'radian',
+--     rmd = 'radian',
+--     quarto = 'radian',
+--     markdown = 'radian',
+--     ['markdown.pandoc'] = 'radian',
+--     python = 'ipython',
+--     sh = 'bash',
+--     REPL = '',
+-- }
+-- local autocmd = vim.api.nvim_create_autocmd
+-- local my_augroup = require('conf.builtin_extend').my_augroup
+--
+-- autocmd('FileType', {
+--     pattern = { 'quarto', 'markdown', 'markdown.pandoc', 'rmd', 'python', 'sh', 'REPL' },
+--     group = my_augroup,
+--     desc = 'set up REPL keymap',
+--     callback = function()
+--         local repl = ft_to_repl[vim.bo.filetype]
+--         bufmap(0, 'n', '<LocalLeader>rs', '', {
+--             callback = run_cmd_with_count('REPLStart ' .. repl),
+--             desc = 'Start an REPL',
+--         })
+--         bufmap(0, 'n', '<LocalLeader>rf', '', {
+--             callback = run_cmd_with_count 'REPLFocus',
+--             desc = 'Focus on REPL',
+--         })
+--         bufmap(0, 'n', '<LocalLeader>rv', '<CMD>Telescope REPLShow<CR>', {
+--             desc = 'View REPLs in telescope',
+--         })
+--         bufmap(0, 'n', '<LocalLeader>rh', '', {
+--             callback = run_cmd_with_count 'REPLHide',
+--             desc = 'Hide REPL',
+--         })
+--         bufmap(0, 'v', '<LocalLeader>s', '', {
+--             callback = run_cmd_with_count 'REPLSendVisual',
+--             desc = 'Send visual region to REPL',
+--         })
+--         bufmap(0, 'n', '<LocalLeader>ss', '', {
+--             callback = run_cmd_with_count 'REPLSendLine',
+--             desc = 'Send current line to REPL',
+--         })
+--         -- `<LocalLeader>sap` will send the current paragraph to the
+--         -- buffer-attached REPL, or REPL 1 if there is no REPL attached.
+--         -- `2<Leader>sap` will send the paragraph to REPL 2. Note that `ap` is
+--         -- just an example and can be replaced with any text object or motion.
+--         bufmap(0, 'n', '<LocalLeader>s', '', {
+--             callback = run_cmd_with_count 'REPLSendMotion',
+--             desc = 'Send motion to REPL',
+--         })
+--         bufmap(0, 'n', '<LocalLeader>rq', '', {
+--             callback = run_cmd_with_count 'REPLClose',
+--             desc = 'Quit REPL',
+--         })
+--         bufmap(0, 'n', '<LocalLeader>rc', '<CMD>REPLCleanup<CR>', {
+--             desc = 'Clear REPLs.',
+--         })
+--         bufmap(0, 'n', '<LocalLeader>rS', '<CMD>REPLSwap<CR>', {
+--             desc = 'Swap REPLs.',
+--         })
+--         bufmap(0, 'n', '<LocalLeader>r?', '', {
+--             callback = run_cmd_with_count 'REPLStart',
+--             desc = 'Start an REPL from available REPL metas',
+--         })
+--         bufmap(0, 'n', '<LocalLeader>ra', '<CMD>REPLAttachBufferToREPL<CR>', {
+--             desc = 'Attach current buffer to a REPL',
+--         })
+--         bufmap(0, 'n', '<LocalLeader>rd', '<CMD>REPLDetachBufferToREPL<CR>', {
+--             desc = 'Detach current buffer to any REPL',
+--         })
+--     end,
+-- })
+-- vim.cmd [[
+-- highlight Normal guibg='#18191c'
+-- ]]
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
