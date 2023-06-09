@@ -339,6 +339,7 @@ vim.o.timeoutlen = 300
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
+vim.o.showtabline=0
 vim.o.guifont = 'Hack Nerd Font:h12'
 -- vim.o.bg = '#18191c'
 -- vim.o.bg = 'dark'
@@ -362,8 +363,8 @@ local map = require("utils").map
 
 map("n", "<leader>w", "<C-w>")
 map("n", "<leader>pp", ":Telescope projects <CR>")
-map("n", "<leader>tt", ":Telescope telescope-tabs list_tabs <CR>")
-map("n", "<leader>tn", ":tabnew <CR>")
+map("n", "<leader><Tab>.", ":Telescope telescope-tabs list_tabs <CR>")
+map("n", "<leader>pn", ":tabnew <CR>")
 map("n", "<leader>st", ":Startify <CR>")
 map("t", "<Esc>", "<C-\\><C-n>")
 map("n", "n", "nzz")
@@ -431,7 +432,7 @@ vim.keymap.set('n', '<leader>/', function()
 end, { desc = '[/] Fuzzily search in current buffer' })
 
 vim.keymap.set('n', '<leader>.', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<eader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
@@ -672,6 +673,7 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
 vim.cmd [[
 highlight Normal guibg='#18191c'
 ]]
