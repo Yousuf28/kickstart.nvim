@@ -339,7 +339,9 @@ vim.o.timeoutlen = 300
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
--- vim.o.guifont = 'Hack Nerd Font'
+vim.o.guifont = 'Hack Nerd Font:h12'
+-- vim.o.bg = '#18191c'
+-- vim.o.bg = 'dark'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
@@ -365,6 +367,7 @@ map("n", "<leader>tn", ":tabnew <CR>")
 map("n", "<leader>st", ":Startify <CR>")
 map("t", "<Esc>", "<C-\\><C-n>")
 map("n", "n", "nzz")
+map("n", "N", "Nzz")
 map("n", "<leader>e", ":NvimTreeToggle<cr>", {silent = true, noremap = true})
 
 -- telescope file browser keymap
@@ -669,6 +672,8 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
-
+vim.cmd [[
+highlight Normal guibg='#18191c'
+]]
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
