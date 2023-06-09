@@ -37,6 +37,10 @@ P.S. You can delete this when you're done too. It's your config now :)
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
@@ -167,7 +171,10 @@ require('lazy').setup({
 
   -- Fuzzy Finder (files, lsp, etc)
   { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
-
+  {
+    "nvim-telescope/telescope-file-browser.nvim",
+    requires = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+  },
   -- Fuzzy Finder Algorithm which requires local dependencies to be built.
   -- Only load if `make` is available. Make sure you have the system
   -- requirements installed.
@@ -224,6 +231,10 @@ require('lazy').setup({
     'HiPhish/nvim-ts-rainbow2',
 
   {'dstein64/vim-startuptime'},
+  {'nvim-tree/nvim-web-devicons'},
+  {'nvim-tree/nvim-tree.lua', config = function()
+      require('nvim-tree').setup{}
+    end},
 
     -- 'cljoly/telescope-repo.nvim',
     'airblade/vim-rooter',
@@ -287,6 +298,7 @@ require('telescope').load_extension'neoclip'
 -- require('telescope').load_extension('env')
 require('telescope').load_extension('telescope-tabs')
 require('telescope').load_extension('projects')
+require("telescope").load_extension "file_browser"
 -- require'telescope'.extensions.projects.projects{}
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -347,10 +359,14 @@ local map = require("utils").map
 
 map("n", "<leader>w", "<C-w>")
 map("n", "<leader>pp", ":Telescope projects <CR>")
-map("n", "<leader>t", ":Telescope telescope-tabs list_tabs <CR>")
+map("n", "<leader>tt", ":Telescope telescope-tabs list_tabs <CR>")
+map("n", "<leader>tn", ":tabnew <CR>")
+map("n", "<leader>st", ":Startify <CR>")
 map("t", "<Esc>", "<C-\\><C-n>")
 map("n", "n", "nzz")
 
+-- telescope file browser keymap
+map("n", "<leader>fb", ":Telescope file_browser <CR>")
 -- map("n", "<leader>wl", "<C-w>l")
 -- map("n", "<leader>wh", "<C-w>h")
 -- map("n", "<leader>wk", "<C-w>k")
@@ -415,6 +431,9 @@ vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
+
+
+
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -587,6 +606,19 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+
+require'nvim-web-devicons'.setup {
+ -- your personnal icons can go here (to override)
+ -- you can specify color or cterm_color instead of specifying both of them
+ -- DevIcon will be appended to `name`
+ override = {
+  zsh = {
+    icon = "",
+    color = "#428850",
+    cterm_color = "65",
+    name = "Zsh"
+  }
+ }}
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
