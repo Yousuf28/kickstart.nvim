@@ -339,6 +339,7 @@ vim.o.timeoutlen = 300
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
+-- vim.o.guifont = 'Hack Nerd Font'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
@@ -364,6 +365,7 @@ map("n", "<leader>tn", ":tabnew <CR>")
 map("n", "<leader>st", ":Startify <CR>")
 map("t", "<Esc>", "<C-\\><C-n>")
 map("n", "n", "nzz")
+map("n", "<leader>e", ":NvimTreeToggle<cr>", {silent = true, noremap = true})
 
 -- telescope file browser keymap
 map("n", "<leader>fb", ":Telescope file_browser <CR>")
@@ -515,7 +517,7 @@ require('nvim-treesitter.configs').setup {
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
+-- vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
 -- [[ Configure LSP ]]
