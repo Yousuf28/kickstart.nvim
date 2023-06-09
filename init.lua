@@ -107,7 +107,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  -- { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim', opts = {} },
   {
     -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -207,7 +207,6 @@ require('lazy').setup({
 	requires = { 'nvim-telescope/telescope.nvim' },
 	config = function()
 		require'telescope-tabs'.setup{
-			-- Your custom config :^)
 		}
 	end
  },
@@ -223,6 +222,8 @@ require('lazy').setup({
 },
 
     'HiPhish/nvim-ts-rainbow2',
+
+  {'dstein64/vim-startuptime'},
 
     -- 'cljoly/telescope-repo.nvim',
     'airblade/vim-rooter',
@@ -248,6 +249,7 @@ require('lazy').setup({
         enable = true,
         update_root = true
       },
+
         -- your configuration comes here
         -- or leave it empty to use the default settings
         -- refer to the configuration section below
@@ -344,7 +346,7 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 local map = require("utils").map
 
 map("n", "<leader>w", "<C-w>")
-map("n", "<leader>p", ":Telescope projects <CR>")
+map("n", "<leader>pp", ":Telescope projects <CR>")
 map("n", "<leader>t", ":Telescope telescope-tabs list_tabs <CR>")
 map("t", "<Esc>", "<C-\\><C-n>")
 map("n", "n", "nzz")
@@ -408,7 +410,7 @@ vim.keymap.set('n', '<leader>/', function()
 end, { desc = '[/] Fuzzily search in current buffer' })
 
 vim.keymap.set('n', '<leader>.', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<eader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
