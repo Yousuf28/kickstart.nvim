@@ -40,9 +40,8 @@ P.S. You can delete this when you're done too. It's your config now :)
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
-
 vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.maplocalleader = ','
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -269,6 +268,21 @@ require('lazy').setup({
       }
     end
   },
+{"rktjmp/highlight-current-n.nvim"},
+{
+  "jackMort/ChatGPT.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("chatgpt").setup()
+    end,
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim"
+    }
+},
+  {'github/copilot.vim'},
+ --
     -- {'vim-pandoc/vim-pandoc'}
     -- { 'vim-pandoc/vim-pandoc-syntax' },
     -- { 'vim-pandoc/vim-rmarkdown', branch = 'official-filetype' },
@@ -302,6 +316,7 @@ require('telescope').load_extension('telescope-tabs')
 require('telescope').load_extension('projects')
 require("telescope").load_extension "file_browser"
 -- require'telescope'.extensions.projects.projects{}
+
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
@@ -369,16 +384,17 @@ map("n", "<leader><Tab>.", ":Telescope telescope-tabs list_tabs <CR>")
 map("n", "<leader>pn", ":tabnew <CR>")
 map("n", "<leader>st", ":Startify <CR>")
 map("t", "<Esc>", "<C-\\><C-n>")
-map("n", "n", "nzz")
-map("n", "N", "Nzz")
+-- map("n", "n", "nzz")
+-- map("n", "N", "Nzz")
 map("n", "<leader>e", ":NvimTreeToggle<cr>", {silent = true, noremap = true})
 map("n", "<leader>tr", ":vert term <CR>")
 map("n", "<leader>ji", ":echo &channel <CR>")
 
 map("n", "<leader>rs", ":REPLStart! <CR>")
 -- map("n", "<C-Enter>", ":REPLSendLine <CR>j")
-map("n", "<C-Enter>", ":REPLSendLine <CR>", {silent = true})
-map("v", "<C-Enter>", ":REPLSendVisual <CR>", {silent = true})
+-- map("n", "<C-Enter>", ":REPLSendLine <CR>", {silent = true})
+-- map("n", "<leader>hh", ":REPLSendLine <CR>", {silent = true})
+-- map("v", "<C-Enter>", ":REPLSendVisual <CR>", {silent = true})
 -- telescope file browser keymap
 map("n", "<leader>fb", ":Telescope file_browser <CR>")
 -- map("n", "<leader>wl", "<C-w>l")
@@ -683,15 +699,15 @@ cmp.setup {
 }
 
 
-        map('n', '<Leader>ll', '', {
-            callback = 'REPLSendLine',
-            desc = 'Send current line to REPL',
-        })
-
-        map('n', '<Leader>vv', '', {
-            callback = 'REPLSendVisual',
-            desc = 'Send current visual to REPL',
-        })
+        -- map('n', '<Leader>ll', '', {
+        --     callback = 'REPLSendLine',
+        --     desc = 'Send current line to REPL',
+        -- })
+        --
+        -- map('n', '<Leader>vv', '', {
+        --     callback = 'REPLSendVisual',
+        --     desc = 'Send current visual to REPL',
+        -- })
 -- yet another repl
 
 -- local function run_cmd_with_count(cmd)
@@ -778,5 +794,61 @@ cmp.setup {
 -- vim.cmd [[
 -- highlight Normal guibg='#18191c'
 -- ]]
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
+local function run_cmd_with_count(cmd)
+    return function()
+        vim.cmd(string.format('%d%s', vim.v.count, cmd))
+    end
+end
+
+local ft_to_repl = {
+    r = 'radian',
+    rmd = 'radian',
+    quarto = 'radian',
+    markdown = 'radian',
+    ['markdown.pandoc'] = 'radian',
+    python = 'ipython',
+    sh = 'bash',
+    REPL = '',
+}
+
+local keymap = vim.api.nvim_set_keymap
+local bufmap = vim.api.nvim_buf_set_keymap
+local autocmd = vim.api.nvim_create_autocmd
+-- keymap('n', '<LocalLeader>cl', '', {
+--     callback = run_cmd_with_count 'REPLSendLine',
+--     desc = 'Send current line to REPL',
+-- })
+--
+-- keymap('n', '<LocalLeader>cv', '', {
+--     callback = run_cmd_with_count 'REPLSendVisual',
+--     desc = 'Send visual region to REPL',
+-- })
+autocmd('FileType', {
+    pattern = { 'quarto', 'r', 'markdown', 'markdown.pandoc', 'rmd', 'python', 'sh', 'REPL' },
+    desc = 'set up REPL keymap',
+    callback = function()
+        bufmap(0, 'v', '<LocalLeader>sv', '', {
+            callback = run_cmd_with_count 'REPLSendVisual',
+            desc = 'Send visual region to REPL',
+        })
+        bufmap(0, 'n', '<LocalLeader>sl', '', {
+            callback = run_cmd_with_count 'REPLSendLine',
+            desc = 'Send current line to REPL',
+        })
+        -- `<LocalLeader>sap` will send the current paragraph to the
+        -- buffer-attached REPL, or REPL 1 if there is no REPL attached.
+        -- `2<Leader>sap` will send the paragraph to REPL 2. Note that `ap` is
+        -- just an example and can be replaced with any text object or motion.
+        bufmap(0, 'n', '<LocalLeader>sm', '', {
+            callback = run_cmd_with_count 'REPLSendMotion',
+            desc = 'Send motion to REPL',
+        })
+end,
+})
+
+
+-- Set the Copilot tab behavior
+vim.g.copilot_no_tab_map = true
+-- Define the keymap for Copilot
+-- vim.api.nvim_set_keymap('i', '<script>', '<C-J>', {silent = true, expr = true, noremap = true})
+vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
