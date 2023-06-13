@@ -136,7 +136,12 @@ require('lazy').setup({
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'onedark'
+      -- vim.cmd.colorscheme 'onedark'
+-- Lua
+  require('onedark').setup {
+      style = 'darker'
+  }
+  require('onedark').load()
     end,
   },
 
@@ -268,12 +273,32 @@ require('lazy').setup({
       }
     end
   },
-{"rktjmp/highlight-current-n.nvim"},
+-- {"rktjmp/highlight-current-n.nvim"},
 {
   "jackMort/ChatGPT.nvim",
     event = "VeryLazy",
     config = function()
-      require("chatgpt").setup()
+      require("chatgpt").setup({
+
+popup_layout = {
+      default = "right",
+      -- center = {
+      --   width = "50%",
+      --   height = "50%",
+      -- },
+      right = {
+        width = "30%",
+        width_settings_open = "50%",
+      },
+    },
+  openai_edit_params = {
+      model = "gpt-3.5-turbo",
+      temperature = 0,
+      top_p = 1,
+      n = 1,
+    },
+
+      })
     end,
     dependencies = {
       "MunifTanjim/nui.nvim",
@@ -281,7 +306,42 @@ require('lazy').setup({
       "nvim-telescope/telescope.nvim"
     }
 },
-  {'github/copilot.vim'},
+  -- {'github/copilot.vim'},
+    { "zbirenbaum/copilot.lua",
+  cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({})
+    end,
+
+  },
+  {'hrsh7th/cmp-path',
+    config=function()
+
+require'cmp'.setup {
+  sources = {
+    { name = 'path' }
+  }}
+    end
+},
+{'kevinhwang91/nvim-hlslens',
+  config=function ()
+require('hlslens').setup({
+calm_down = true,
+    nearest_only = true,
+    nearest_float_when = 'always'
+
+      })
+  end},
+-- {"rktjmp/highlight-current-n.nvim",
+--  config = function()
+-- require("highlight_current_n").setup({
+--   highlight_group = "IncSearch" -- highlight group name to use for highlight
+-- })
+--     end
+--
+--   },
+
  --
     -- {'vim-pandoc/vim-pandoc'}
     -- { 'vim-pandoc/vim-pandoc-syntax' },
@@ -322,7 +382,7 @@ require("telescope").load_extension "file_browser"
 -- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
-vim.o.hlsearch = false
+-- vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
@@ -389,7 +449,7 @@ map("t", "<Esc>", "<C-\\><C-n>")
 map("n", "<leader>e", ":NvimTreeToggle<cr>", {silent = true, noremap = true})
 map("n", "<leader>tr", ":vert term <CR>")
 map("n", "<leader>ji", ":echo &channel <CR>")
-
+map('n', '<Leader>sss', ":s#\\\\#/#g <CR>")
 map("n", "<leader>rs", ":REPLStart! <CR>")
 -- map("n", "<C-Enter>", ":REPLSendLine <CR>j")
 -- map("n", "<C-Enter>", ":REPLSendLine <CR>", {silent = true})
@@ -846,9 +906,28 @@ autocmd('FileType', {
 end,
 })
 
+-- require('chatgpt').setup()
+-- ChatGPT keymap settings 
+vim.api.nvim_set_keymap("n", "<Leader>cg", ":ChatGPT<CR>", {noremap = true, silent = true})
+vim.api.nvim_set_keymap("n", "<Leader>cc", ":ChatGPTCompleteCode<CR>", {noremap = true, silent = true})
 
 -- Set the Copilot tab behavior
-vim.g.copilot_no_tab_map = true
+-- vim.g.copilot_no_tab_map = true
 -- Define the keymap for Copilot
 -- vim.api.nvim_set_keymap('i', '<script>', '<C-J>', {silent = true, expr = true, noremap = true})
-vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+-- vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+
+local kopts = {noremap = true, silent = true}
+
+vim.api.nvim_set_keymap('n', 'n',
+    [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
+    kopts)
+vim.api.nvim_set_keymap('n', 'N',
+    [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
+    kopts)
+vim.api.nvim_set_keymap('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], kopts)
+vim.api.nvim_set_keymap('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], kopts)
+vim.api.nvim_set_keymap('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], kopts)
+vim.api.nvim_set_keymap('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], kopts)
+
+vim.api.nvim_set_keymap('n', '<Leader>l', '<Cmd>noh<CR>', kopts)
