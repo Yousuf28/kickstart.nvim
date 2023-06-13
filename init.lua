@@ -1,39 +1,3 @@
---[[
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
-
-Kickstart.nvim is *not* a distribution.
-
-Kickstart.nvim is a template for your own configuration.
-  The goal is that you can read every line of code, top-to-bottom, understand
-  what your configuration is doing, and modify it to suit your needs.
-
-  Once you've done that, you should start exploring, configuring and tinkering to
-  explore Neovim!
-
-  If you don't know anything about Lua, I recommend taking some time to read through
-  a guide. One possible example:
-  - https://learnxinyminutes.com/docs/lua/
-
-  And then you can explore or search through `:help lua-guide`
-
-
-Kickstart Guide:
-
-I have left several `:help X` comments throughout the init.lua
-You should run that command and read that help section for more information.
-
-In addition, I have some `NOTE:` items throughout the file.
-These are for you, the reader to help understand what is happening. Feel free to delete
-them once you know what you're doing, but they should serve as a guide for when you
-are first encountering a few different constructs in your nvim config.
-
-I hope you enjoy your Neovim journey,
-- TJ
-
-P.S. You can delete this when you're done too. It's your config now :)
---]]
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -222,10 +186,10 @@ require('lazy').setup({
 	end
  },
 
- {'jpalardy/vim-slime',
- config = function()
- vim.g.slime_target='neovim'
- end},
+ -- {'jpalardy/vim-slime',
+ -- config = function()
+ -- vim.g.slime_target='neovim'
+ -- end},
 
 {
 	"windwp/nvim-autopairs",
@@ -333,6 +297,7 @@ calm_down = true,
 
       })
   end},
+  {'danilamihailov/beacon.nvim'},
 -- {"rktjmp/highlight-current-n.nvim",
 --  config = function()
 -- require("highlight_current_n").setup({
@@ -387,6 +352,7 @@ require("telescope").load_extension "file_browser"
 -- Make line numbers default
 vim.wo.number = true
 
+vim.opt.relativenumber = true
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
@@ -451,20 +417,8 @@ map("n", "<leader>tr", ":vert term <CR>")
 map("n", "<leader>ji", ":echo &channel <CR>")
 map('n', '<Leader>sss', ":s#\\\\#/#g <CR>")
 map("n", "<leader>rs", ":REPLStart! <CR>")
--- map("n", "<C-Enter>", ":REPLSendLine <CR>j")
--- map("n", "<C-Enter>", ":REPLSendLine <CR>", {silent = true})
--- map("n", "<leader>hh", ":REPLSendLine <CR>", {silent = true})
--- map("v", "<C-Enter>", ":REPLSendVisual <CR>", {silent = true})
 -- telescope file browser keymap
 map("n", "<leader>fb", ":Telescope file_browser <CR>")
--- map("n", "<leader>wl", "<C-w>l")
--- map("n", "<leader>wh", "<C-w>h")
--- map("n", "<leader>wk", "<C-w>k")
--- map("n", "<leader>wj", "<C-w>j")
--- map("n", "<leader>wv", "<C-w>v")
--- map("n", "<leader>ws", "<C-w>s")
--- map("n", "<Leader>?", ":WhichKey ','<CR>")
--- map("n", "<Leader>a", ":cclose<CR>")
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -698,9 +652,6 @@ mason_lspconfig.setup_handlers {
 }
 
 require'nvim-web-devicons'.setup {
- -- your personnal icons can go here (to override)
- -- you can specify color or cterm_color instead of specifying both of them
- -- DevIcon will be appended to `name`
  override = {
   zsh = {
     icon = "",
@@ -758,102 +709,6 @@ cmp.setup {
   },
 }
 
-
-        -- map('n', '<Leader>ll', '', {
-        --     callback = 'REPLSendLine',
-        --     desc = 'Send current line to REPL',
-        -- })
-        --
-        -- map('n', '<Leader>vv', '', {
-        --     callback = 'REPLSendVisual',
-        --     desc = 'Send current visual to REPL',
-        -- })
--- yet another repl
-
--- local function run_cmd_with_count(cmd)
---     return function()
---         vim.cmd(string.format('%d%s', vim.v.count, cmd))
---     end
--- end
---
--- local keymap = vim.api.nvim_set_keymap
--- local bufmap = vim.api.nvim_buf_set_keymap
---
--- local ft_to_repl = {
---     r = 'radian',
---     rmd = 'radian',
---     quarto = 'radian',
---     markdown = 'radian',
---     ['markdown.pandoc'] = 'radian',
---     python = 'ipython',
---     sh = 'bash',
---     REPL = '',
--- }
--- local autocmd = vim.api.nvim_create_autocmd
--- local my_augroup = require('conf.builtin_extend').my_augroup
---
--- autocmd('FileType', {
---     pattern = { 'quarto', 'markdown', 'markdown.pandoc', 'rmd', 'python', 'sh', 'REPL' },
---     group = my_augroup,
---     desc = 'set up REPL keymap',
---     callback = function()
---         local repl = ft_to_repl[vim.bo.filetype]
---         bufmap(0, 'n', '<LocalLeader>rs', '', {
---             callback = run_cmd_with_count('REPLStart ' .. repl),
---             desc = 'Start an REPL',
---         })
---         bufmap(0, 'n', '<LocalLeader>rf', '', {
---             callback = run_cmd_with_count 'REPLFocus',
---             desc = 'Focus on REPL',
---         })
---         bufmap(0, 'n', '<LocalLeader>rv', '<CMD>Telescope REPLShow<CR>', {
---             desc = 'View REPLs in telescope',
---         })
---         bufmap(0, 'n', '<LocalLeader>rh', '', {
---             callback = run_cmd_with_count 'REPLHide',
---             desc = 'Hide REPL',
---         })
---         bufmap(0, 'v', '<LocalLeader>s', '', {
---             callback = run_cmd_with_count 'REPLSendVisual',
---             desc = 'Send visual region to REPL',
---         })
---         bufmap(0, 'n', '<LocalLeader>ss', '', {
---             callback = run_cmd_with_count 'REPLSendLine',
---             desc = 'Send current line to REPL',
---         })
---         -- `<LocalLeader>sap` will send the current paragraph to the
---         -- buffer-attached REPL, or REPL 1 if there is no REPL attached.
---         -- `2<Leader>sap` will send the paragraph to REPL 2. Note that `ap` is
---         -- just an example and can be replaced with any text object or motion.
---         bufmap(0, 'n', '<LocalLeader>s', '', {
---             callback = run_cmd_with_count 'REPLSendMotion',
---             desc = 'Send motion to REPL',
---         })
---         bufmap(0, 'n', '<LocalLeader>rq', '', {
---             callback = run_cmd_with_count 'REPLClose',
---             desc = 'Quit REPL',
---         })
---         bufmap(0, 'n', '<LocalLeader>rc', '<CMD>REPLCleanup<CR>', {
---             desc = 'Clear REPLs.',
---         })
---         bufmap(0, 'n', '<LocalLeader>rS', '<CMD>REPLSwap<CR>', {
---             desc = 'Swap REPLs.',
---         })
---         bufmap(0, 'n', '<LocalLeader>r?', '', {
---             callback = run_cmd_with_count 'REPLStart',
---             desc = 'Start an REPL from available REPL metas',
---         })
---         bufmap(0, 'n', '<LocalLeader>ra', '<CMD>REPLAttachBufferToREPL<CR>', {
---             desc = 'Attach current buffer to a REPL',
---         })
---         bufmap(0, 'n', '<LocalLeader>rd', '<CMD>REPLDetachBufferToREPL<CR>', {
---             desc = 'Detach current buffer to any REPL',
---         })
---     end,
--- })
--- vim.cmd [[
--- highlight Normal guibg='#18191c'
--- ]]
 local function run_cmd_with_count(cmd)
     return function()
         vim.cmd(string.format('%d%s', vim.v.count, cmd))
@@ -871,34 +726,21 @@ local ft_to_repl = {
     REPL = '',
 }
 
-local keymap = vim.api.nvim_set_keymap
+-- local keymap = vim.api.nvim_set_keymap
 local bufmap = vim.api.nvim_buf_set_keymap
 local autocmd = vim.api.nvim_create_autocmd
--- keymap('n', '<LocalLeader>cl', '', {
---     callback = run_cmd_with_count 'REPLSendLine',
---     desc = 'Send current line to REPL',
--- })
---
--- keymap('n', '<LocalLeader>cv', '', {
---     callback = run_cmd_with_count 'REPLSendVisual',
---     desc = 'Send visual region to REPL',
--- })
 autocmd('FileType', {
     pattern = { 'quarto', 'r', 'markdown', 'markdown.pandoc', 'rmd', 'python', 'sh', 'REPL' },
     desc = 'set up REPL keymap',
     callback = function()
-        bufmap(0, 'v', '<LocalLeader>sv', '', {
+        bufmap(0, 'v', '<C-Enter>', '', {
             callback = run_cmd_with_count 'REPLSendVisual',
             desc = 'Send visual region to REPL',
         })
-        bufmap(0, 'n', '<LocalLeader>sl', '', {
+        bufmap(0, 'n', '<C-Enter>', '', {
             callback = run_cmd_with_count 'REPLSendLine',
             desc = 'Send current line to REPL',
         })
-        -- `<LocalLeader>sap` will send the current paragraph to the
-        -- buffer-attached REPL, or REPL 1 if there is no REPL attached.
-        -- `2<Leader>sap` will send the paragraph to REPL 2. Note that `ap` is
-        -- just an example and can be replaced with any text object or motion.
         bufmap(0, 'n', '<LocalLeader>sm', '', {
             callback = run_cmd_with_count 'REPLSendMotion',
             desc = 'Send motion to REPL',
@@ -906,17 +748,11 @@ autocmd('FileType', {
 end,
 })
 
--- require('chatgpt').setup()
 -- ChatGPT keymap settings 
 vim.api.nvim_set_keymap("n", "<Leader>cg", ":ChatGPT<CR>", {noremap = true, silent = true})
 vim.api.nvim_set_keymap("n", "<Leader>cc", ":ChatGPTCompleteCode<CR>", {noremap = true, silent = true})
 
--- Set the Copilot tab behavior
--- vim.g.copilot_no_tab_map = true
--- Define the keymap for Copilot
--- vim.api.nvim_set_keymap('i', '<script>', '<C-J>', {silent = true, expr = true, noremap = true})
--- vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
-
+-- lhslens search highlight
 local kopts = {noremap = true, silent = true}
 
 vim.api.nvim_set_keymap('n', 'n',
