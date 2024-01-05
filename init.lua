@@ -6,6 +6,7 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
+-- vim.g.shellcmdflag= '-c'
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -88,7 +89,9 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk, { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
+        vim.keymap.set('n', '<leader>gp',
+          require('gitsigns').prev_hunk, { buffer = bufnr,
+            desc = '[G]o to [P]revious Hunk' })
         vim.keymap.set('n', '<leader>gn', require('gitsigns').next_hunk, { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
         vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
       end,
@@ -123,16 +126,16 @@ require('lazy').setup({
     },
   },
 
-  {
-    -- Add indentation guides even on blank lines
-    'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help indent_blankline.txt`
-    opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
-    },
-  },
+  -- {
+  --   -- Add indentation guides even on blank lines
+  --   'lukas-reineke/indent-blankline.nvim',
+  --   -- Enable `lukas-reineke/indent-blankline.nvim`
+  --   -- See `:help indent_blankline.txt`
+  --   opts = {
+  --     char = '┊',
+  --     show_trailing_blankline_indent = false,
+  --   },
+  -- },
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
@@ -186,17 +189,23 @@ require('lazy').setup({
 	end
  },
 
- -- {'jpalardy/vim-slime',
- -- config = function()
- -- vim.g.slime_target='neovim'
- -- end},
+ {'jpalardy/vim-slime',
+ config = function()
+ -- vim.g.slime_target='tmux'
+ -- vim.g.slime_paste_file='C:/Users/Md.Ali/.slime_paste'
+ end},
 
 {
 	"windwp/nvim-autopairs",
     config = function() require("nvim-autopairs").setup {} end
 },
 
-    'HiPhish/nvim-ts-rainbow2',
+{   'HiPhish/nvim-ts-rainbow2'},
+
+{
+	"nikvdp/neomux"
+
+},
 
   {'dstein64/vim-startuptime'},
   {'nvim-tree/nvim-web-devicons'},
@@ -207,18 +216,18 @@ require('lazy').setup({
     -- 'cljoly/telescope-repo.nvim',
     'airblade/vim-rooter',
     -- 'LinArcX/telescope-env.nvim',
-    {'mhinz/vim-startify', config = function()
-  vim.g.startify_lists = {
-    {type = 'dir',       header = {'   Current Directory ' .. vim.fn.getcwd()}},
-    {type = 'files',     header = {'   Files'}},
-    {type = 'sessions',  header = {'   Sessions'}},
-    {type = 'bookmarks', header = {'   Bookmarks'}},
-    {type = 'commands',  header = {'   Commands'}}
-}
-  end
-  },
+--     {'mhinz/vim-startify', config = function()
+--   vim.g.startify_lists = {
+--     {type = 'dir',       header = {'   Current Directory ' .. vim.fn.getcwd()}},
+--     {type = 'files',     header = {'   Files'}},
+--     {type = 'sessions',  header = {'   Sessions'}},
+--     {type = 'bookmarks', header = {'   Bookmarks'}},
+--     {type = 'commands',  header = {'   Commands'}}
+-- }
+--   end
+--   },
 -- yet another repl 
-  { 'milanglacier/yarepl.nvim', config = true },
+  -- { 'milanglacier/yarepl.nvim', config = true },
   -- Lua
   {
     "ahmedkhalf/project.nvim",
@@ -238,53 +247,65 @@ require('lazy').setup({
     end
   },
 -- {"rktjmp/highlight-current-n.nvim"},
-{
-  "jackMort/ChatGPT.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("chatgpt").setup({
-
-popup_layout = {
-      default = "right",
-      -- center = {
-      --   width = "50%",
-      --   height = "50%",
-      -- },
-      right = {
-        width = "30%",
-        width_settings_open = "50%",
-      },
-    },
-  openai_edit_params = {
-      model = "gpt-3.5-turbo",
-      temperature = 0,
-      top_p = 1,
-      n = 1,
-    },
-
-      })
-    end,
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim"
-    }
-},
+-- {
+--   "jackMort/ChatGPT.nvim",
+--     event = "VeryLazy",
+--     config = function()
+--       require("chatgpt").setup({
+--
+--     api_key_cmd = "gpg --decrypt --passphrase ' ' ~/nvim.gpg > /dev/null",
+--
+-- popup_layout = {
+--       default = "right",
+--       -- center = {
+--       --   width = "50%",
+--       --   height = "50%",
+--       -- },
+--       right = {
+--         width = "30%",
+--         width_settings_open = "50%",
+--       },
+--     },
+--   openai_edit_params = {
+--       model = "gpt-3.5-turbo",
+--       temperature = 0,
+--       top_p = 1,
+--       n = 1,
+--     },
+--
+--       })
+--     end,
+--     dependencies = {
+--       "MunifTanjim/nui.nvim",
+--       "nvim-lua/plenary.nvim",
+--       "nvim-telescope/telescope.nvim"
+--     }
+-- },
   -- {'github/copilot.vim'},
-    { "zbirenbaum/copilot.lua",
-  cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup({})
-    end,
-
-  },
+  --   { "zbirenbaum/copilot.lua",
+  -- cmd = "Copilot",
+  --   event = "InsertEnter",
+  --   config = function()
+  --     require("copilot").setup({})
+  --   end,
+  --
+  -- },
   {'hrsh7th/cmp-path',
     config=function()
 
 require'cmp'.setup {
   sources = {
     { name = 'path' }
+  }}
+    end
+},
+
+  {'hrsh7th/cmp-buffer',
+    config=function()
+
+require'cmp'.setup {
+  sources = {
+    { name = 'buffer' }
   }}
     end
 },
@@ -298,6 +319,13 @@ calm_down = true,
       })
   end},
   {'danilamihailov/beacon.nvim'},
+  {'miversen33/netman.nvim'},
+  -- {'nvim-orgmode/orgmode',
+  --     ft = {'org'},
+  --     config = function()
+  --             require('orgmode').setup{}
+  --     end
+  --     },
 -- {"rktjmp/highlight-current-n.nvim",
 --  config = function()
 -- require("highlight_current_n").setup({
@@ -350,9 +378,24 @@ require("telescope").load_extension "file_browser"
 -- vim.o.hlsearch = false
 
 -- Make line numbers default
-vim.wo.number = true
+-- vim.wo.number = false
+-- vim.wo.numberwidth=1
 
 vim.opt.relativenumber = true
+-- vim.opt.shell = "C:/msys64/usr/bin/bash.exe"
+-- vim.opt.shellcmdflag = '-c'
+-- vim.opt.shellslash = 'shellslash'
+
+
+-- vim.cmd([[ 
+-- if $SHELL == "C:/msys64/usr/bin/bash"
+--     let &shellcmdflag = '-c'
+--     set shellxquote=(
+--     set shellslash
+-- endif
+-- )
+--
+-- ]])
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
@@ -383,11 +426,15 @@ vim.o.timeoutlen = 300
 vim.o.completeopt = 'menuone,noselect'
 
 vim.o.showtabline=0
-vim.o.guifont = 'Hack Nerd Font:h12'
+-- vim.o.guifont = 'Hack Nerd Font:h12'
+-- vim.o.guifont = 'Fira Mono:h12'
+vim.o.guifont = 'Fira Code Retina:h12'
 -- vim.o.bg = '#18191c'
 -- vim.o.bg = 'dark'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
+-- vim.o.shell = 'C:/"Program Files"/Git/bin/bash.exe'
+-- vim.o.shell = 'C:/msys64/usr/bin/bash.exe'
 
 -- [[ Basic Keymaps ]]
 
@@ -408,7 +455,7 @@ map("n", "<leader>w", "<C-w>")
 map("n", "<leader>pp", ":Telescope projects <CR>")
 map("n", "<leader><Tab>.", ":Telescope telescope-tabs list_tabs <CR>")
 map("n", "<leader>pn", ":tabnew <CR>")
-map("n", "<leader>st", ":Startify <CR>")
+-- map("n", "<leader>st", ":Startify <CR>")
 map("t", "<Esc>", "<C-\\><C-n>")
 -- map("n", "n", "nzz")
 -- map("n", "N", "Nzz")
@@ -416,7 +463,7 @@ map("n", "<leader>e", ":NvimTreeToggle<cr>", {silent = true, noremap = true})
 map("n", "<leader>tr", ":vert term <CR>")
 map("n", "<leader>ji", ":echo &channel <CR>")
 map('n', '<Leader>sss', ":s#\\\\#/#g <CR>")
-map("n", "<leader>rs", ":REPLStart! <CR>")
+-- map("n", "<leader>rs", ":REPLStart! <CR>")
 -- telescope file browser keymap
 map("n", "<leader>fb", ":Telescope file_browser <CR>")
 -- [[ Highlight on yank ]]
@@ -487,7 +534,7 @@ require('nvim-treesitter.configs').setup {
   ensure_installed = { 'lua','r', 'python',  'typescript', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-  auto_install = false,
+  auto_install = true,
 
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python', 'r'} },
@@ -727,30 +774,35 @@ local ft_to_repl = {
 }
 
 -- local keymap = vim.api.nvim_set_keymap
-local bufmap = vim.api.nvim_buf_set_keymap
-local autocmd = vim.api.nvim_create_autocmd
-autocmd('FileType', {
-    pattern = { 'quarto', 'r', 'markdown', 'markdown.pandoc', 'rmd', 'python', 'sh', 'REPL' },
-    desc = 'set up REPL keymap',
-    callback = function()
-        bufmap(0, 'v', '<C-Enter>', '', {
-            callback = run_cmd_with_count 'REPLSendVisual',
-            desc = 'Send visual region to REPL',
-        })
-        bufmap(0, 'n', '<C-Enter>', '', {
-            callback = run_cmd_with_count 'REPLSendLine',
-            desc = 'Send current line to REPL',
-        })
-        bufmap(0, 'n', '<LocalLeader>sm', '', {
-            callback = run_cmd_with_count 'REPLSendMotion',
-            desc = 'Send motion to REPL',
-        })
-end,
-})
+-- local bufmap = vim.api.nvim_buf_set_keymap
+-- local autocmd = vim.api.nvim_create_autocmd
+-- autocmd('FileType', {
+--     pattern = { 'quarto', 'r', 'markdown', 'markdown.pandoc', 'rmd', 'python', 'sh', 'REPL' },
+--     desc = 'set up REPL keymap',
+--     callback = function()
+--         bufmap(0, 'v', '<C-Enter>', '', {
+--             callback = run_cmd_with_count 'REPLSendVisual',
+--             desc = 'Send visual region to REPL',
+--         })
+--         bufmap(0, 'n', '<C-Enter>', '', {
+--             callback = run_cmd_with_count 'REPLSendLine',
+--             desc = 'Send current line to REPL',
+--         })
+--
+--         bufmap(0, 'i', '<C-Enter>', '', {
+--             callback = run_cmd_with_count 'REPLSendLine',
+--             desc = 'Send current line to REPL',
+--         })
+--         bufmap(0, 'n', '<LocalLeader>sm', '', {
+--             callback = run_cmd_with_count 'REPLSendMotion',
+--             desc = 'Send motion to REPL',
+--         })
+-- end,
+-- })
 
 -- ChatGPT keymap settings 
-vim.api.nvim_set_keymap("n", "<Leader>cg", ":ChatGPT<CR>", {noremap = true, silent = true})
-vim.api.nvim_set_keymap("n", "<Leader>cc", ":ChatGPTCompleteCode<CR>", {noremap = true, silent = true})
+-- vim.api.nvim_set_keymap("n", "<Leader>cg", ":ChatGPT<CR>", {noremap = true, silent = true})
+-- vim.api.nvim_set_keymap("n", "<Leader>cc", ":ChatGPTCompleteCode<CR>", {noremap = true, silent = true})
 
 -- lhslens search highlight
 local kopts = {noremap = true, silent = true}
@@ -767,3 +819,31 @@ vim.api.nvim_set_keymap('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]]
 vim.api.nvim_set_keymap('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], kopts)
 
 vim.api.nvim_set_keymap('n', '<Leader>l', '<Cmd>noh<CR>', kopts)
+
+-- org mode 
+-- Load custom treesitter grammar for org filetype
+-- require('orgmode').setup_ts_grammar()
+
+-- Treesitter configuration
+require('nvim-treesitter.configs').setup {
+  -- If TS highlights are not enabled at all, or disabled via `disable` prop,
+  -- highlighting will fallback to default Vim syntax highlighting
+  highlight = {
+    enable = true,
+    -- Required for spellcheck, some LaTex highlights and
+    -- code block highlights that do not have ts grammar
+    additional_vim_regex_highlighting = {'org'},
+  },
+  ensure_installed = {'org'}, -- Or run :TSUpdate org
+}
+
+-- require('orgmode').setup({
+--   org_agenda_files = {'~/org'},
+--   org_default_notes_file = '~/org/meetings.org',
+-- })
+
+-- let &shell = "C:/msys64/usr/bin/bash.exe"
+-- ter "'C:/Program Files/Git/bin/bash.exe'"
+
+
+
